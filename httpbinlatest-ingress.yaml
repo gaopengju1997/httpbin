@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: httpbinlatest
+  namespace: yuanzhang
+spec:
+  rules:
+    - host: httpbinlatest.myit.icu
+      http:
+        paths:
+          - backend:
+              serviceName: httpbinlatest
+              servicePort: 80
