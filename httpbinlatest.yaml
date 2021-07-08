@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbinlatest
+  namespace: yuanzhang
+spec:
+  selector:
+    matchLabels:
+      app: httpbinlatest
+      author: yuanzhang
+  replicas: 3
+  revisionHistoryLimit: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: httpbinlatest
+        author: yuanzhang
+    spec:
+      containers:
+        - name: httpbinlatest-contrainer
+          imagePullPolicy: IfNotPresent
+          image: harbor.myit.icu/yuanzhang/kennethreitz-httpbin:latest
+          ports:
+          - containerPort: 80
+            name: webport
+          startupProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 1
+            periodSeconds: 3
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
