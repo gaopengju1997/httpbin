@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbintest
+  namespace: yuanzhang
+spec:
+  selector:
+    matchLabels:
+      app: httpbintest
+      author: yuanzhang
+  replicas: 1
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: httpbintest
+        author: yuanzhang
+    spec:
+      containers:
+        - name: httpbintest
+          imagePullPolicy: IfNotPresent
+          image: harbor.myit.icu/yuanzhang/kennethreitz-httpbin:test
+          ports:
+          - containerPort: 80
+            name: web-port
+          startupProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 1
+            periodSeconds: 3
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
